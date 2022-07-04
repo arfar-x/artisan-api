@@ -1,0 +1,39 @@
+{
+    "name": "aariow/artisan-http",
+    "description": "Run Artisan commands through APIs and HTTP requests safely",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alireza Far",
+            "email": "aariow01@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Artisan\\Api\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Artisan\\Api\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.21",
+        "orchestra/testbench": "^7.6"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Artisan\\Api\\ArtisanApiServiceProvider"
+            ],
+            "aliases": {
+                "ArtisanApi": "Artisan\\Api\\ArtisanApi"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
