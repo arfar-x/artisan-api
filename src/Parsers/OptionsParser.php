@@ -4,7 +4,7 @@ namespace Artisan\Api\Parsers;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-class OptionsParser implements ParserInterface
+class OptionsParser implements ArrayableParserInterface
 {
     public static function parse(string $command, SymfonyCommand $class = null): array
     {

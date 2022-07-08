@@ -4,7 +4,7 @@ namespace Artisan\Api\Parsers;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-class ArgumentsParser
+class ArgumentsParser implements ArrayableParserInterface
 {
     /**
      * Return all arguments of the given command

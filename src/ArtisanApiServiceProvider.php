@@ -7,7 +7,6 @@ use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\CheckEnvMode;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Artisan;
 
 class ArtisanApiServiceProvider extends ServiceProvider
 {
@@ -15,12 +14,13 @@ class ArtisanApiServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/artisan.php', 'artisan');
 
+
         $this->publishes([
             __DIR__ . "/../config/artisan.php" => config_path('artisan.php')
         ]);
 
         $this->app->bind('artisan.api', function () {
-            return new Manager;
+            return new ArtisanApiManager;
         });
 
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
@@ -54,8 +54,8 @@ class ArtisanApiServiceProvider extends ServiceProvider
             ->aliasMiddleware('artisan.api.env', CheckEnvMode::class)
             ->pushMiddlewareToGroup('api', CheckEnvMode::class);
 
-        $this->app->make('artisan.api')
-            ->generateRoutes();
+       $this->app->make('artisan.api')
+           ->generateRoutes();
 
         /**
          * Register the commands if the application is running via CLI

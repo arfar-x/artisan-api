@@ -9,8 +9,10 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 /**
  * This class parses and accesses to necessary information about given command
+ * @deprecated This class is not used anywhere. All necessary attributes are handled
+ *             within adapter and will be passed to routing system.
  */
-class CommandParser implements ParserInterface
+class CommandParser implements ArrayableParserInterface
 {
     /**
      * Return formatted command's array
@@ -21,8 +23,11 @@ class CommandParser implements ParserInterface
      */
     public static function parse(string $command, SymfonyCommand $class = null): array
     {
+        $generator = (bool)($class instanceof GeneratorCommand);
+
         return [
-            $command => $class::class
+            $command => $class::class,
+            "generator" => $generator
         ];
     }
 
@@ -32,7 +37,7 @@ class CommandParser implements ParserInterface
      * @return array[]
      * @throws CommandParserException
      *
-     * @deprecated
+     * @deprecated There is no need for parsing command's attributes from its signature anymore.
      */
     public static function oldParse(string $command, SymfonyCommand $class): array
     {

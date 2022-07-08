@@ -3,16 +3,14 @@
 namespace Artisan\Api\Tests;
 
 use Artisan\Api\ArtisanApiServiceProvider;
-use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
-class TestCase extends TestCase
+class TestCase extends BaseTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
         // additional setup
-
-        return void;
     }
 
     protected function getPackageProviders($app)
