@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Artisan-Http package.
+ *
+ * (c) Alireza Farhanian <aariow01@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+ * @link https://github/aariow/artisan-http
+ */
+
 namespace Artisan\Api;
 
 use Artisan\Api\Console\UpCommand;
@@ -12,12 +23,19 @@ class ArtisanApiServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/artisan.php', 'artisan');
 
+        $this->mergeConfigFrom(__DIR__ . '/../config/artisan.php', 'artisan');
 
         $this->publishes([
             __DIR__ . "/../config/artisan.php" => config_path('artisan.php')
         ]);
+
+        /**
+         * Prevents application to apply package to container.
+         * 
+         * This can be modified in config/artisan.php
+         */
+        if (!config('artisan.auto-run')) return;
 
         $this->app->bind('artisan.api', function () {
             return new ArtisanApiManager;
@@ -27,12 +45,6 @@ class ArtisanApiServiceProvider extends ServiceProvider
         $loader->alias('ArtisanApi', ArtisanApi::class);
 
         /**
-         * Publish API routes and endpoints:
-         *      All API endpoints generated automatically depended on Laravel Artisan's commands,
-         *          e.g. php arisan make:model
-         *                  => domain.com/artisan/api/make/model/EventName?options=controller,factory&force=true
-         *                  => domain.com/artisan/api/make/model/EventName?options=c,f,m,r
-         *
          * Publish Events and Listeners
          *
          * Add necessary commands to Artisan:
@@ -44,18 +56,18 @@ class ArtisanApiServiceProvider extends ServiceProvider
          */
     }
 
-    public function boot(Kernel $kernel)
+    public function boot()
     {
-//        $configPath = __DIR__ . '/../config/artisan.php';
-//        $this->publishes([$configPath => config_path('artisan.php')], 'config');
+        //        $configPath = __DIR__ . '/../config/artisan.php';
+        //        $this->publishes([$configPath => config_path('artisan.php')], 'config');
 
-//        $kernel->pushMiddleware(CheckEnvMode::class);
+        //        $kernel->pushMiddleware(CheckEnvMode::class);
         $this->app->make('router')
             ->aliasMiddleware('artisan.api.env', CheckEnvMode::class)
             ->pushMiddlewareToGroup('api', CheckEnvMode::class);
 
-       $this->app->make('artisan.api')
-           ->generateRoutes();
+        $this->app->make('artisan.api')
+            ->router()->generate();
 
         /**
          * Register the commands if the application is running via CLI

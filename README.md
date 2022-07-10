@@ -14,7 +14,7 @@ A common Artisan command like `php artisan make:model User -c -f` is translated 
 https://domain.com/artisan/api/make/model/User?options=c,f&force=true
 ```
 
-So the formula is:
+So API convention is:
 ```
 https://domain.com/artisan/api/{command}/{sub-command}/{argument}?options={options}&force=true
 ```

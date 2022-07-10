@@ -3,7 +3,7 @@
 namespace Artisan\Api\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class RunCommandController extends BaseController
 {
@@ -18,8 +18,9 @@ class RunCommandController extends BaseController
          */
 
         dd([
-            "Called within \'" . class_basename($this) . "\' controller",
-            "Method: ${$request->method()}"
+            "path" => $request->path(),
+            "calledIn" => class_basename($this) . "@" . __FUNCTION__,
+            "Method" => $request->method()
         ]);
     }
 }

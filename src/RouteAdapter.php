@@ -2,9 +2,6 @@
 
 namespace Artisan\Api;
 
-use Artisan\Api\Parsers\Parser;
-use Illuminate\Support\Collection;
-
 /**
  * This class is responsible to extract necessary parameters for dynamic routing; implements Adapter pattern.
  */
@@ -12,51 +9,90 @@ class RouteAdapter
 {
 
     /**
-     * @var Collection $adaptedCommands
+     * @var CommandsCollection $commands
      */
-    protected CommandsCollection $adaptedCommands;
+    protected CommandsCollection $commands;
 
     /**
-     * Gather all commands and their arguments and options into a CommandsCollection object
+     * Gather all commands to work on them
      *
      * @param CommandsCollection $commands
      */
-    public function __construct(CommandsCollection $commands)
+    public function __construct(CommandsCollection $collectionCommands)
     {
-        // We must initialize $adaptedCommands with an empty instance of CommandsCollection
-        $this->adaptedCommands = new CommandsCollection([], shouldBeEmpty: true);
-
-        foreach ($commands->all() as $command) {
-
-            $this->adaptedCommands->put($command->getName(), [
-                    "class"     => $command->getClass(),
-                    "arguments" => $command->getArguments(),
-                    "options"   => $command->getOptions(),
-                    "generator" => $command->isGenerator(),
-                    "hidden"    => $command->isHidden()
-                ]
-            );
-        }
+        $this->commands = $collectionCommands;
 
         return $this;
     }
 
     /**
-     * @return Collection
+     * @return CommandsCollection
      */
-    public function getAdaptedCommands()
+    public function getCommands()
     {
-        return $this->adaptedCommands;
+        return $this->commands;
     }
 
     /**
      * Get command name and return parsed translated URI for API routes
      *
      * @param string $command
-     * @return mixed
+     * @return void|string
      */
-    public function getUri(string|array $command)
+    public function getUri($command, $withHiddens)
     {
-        // return $this->getUri($command);
+        $command = $this->commands->get($command->getName());
+
+        if ($withHiddens === false && $command->isHidden() === true) return;
+
+        $route = $this->toRoute($command);
+
+        $arguments = $this->toArgumentRoute($command);
+
+        $uri = "/$route/$arguments";
+
+        return $uri;
+    }
+
+    /**
+     * Replaces `:` with `/` for those commands' name with 'make:model' format
+     *
+     * @param object $command
+     * @return string
+     */
+    protected function toRoute($command)
+    {
+        $commandName = str_replace(":", "/", $command->getName());
+
+        return $commandName;
+    }
+
+    /**
+     * Get command's arguments to route string
+     *
+     * @param object $command
+     * @return string
+     */
+    protected function toArgumentRoute($command)
+    {
+        /**
+         * If command is Generator, then an argument called 'name' is mandatory.
+         * All Generator commands need 'name' argument.
+         * Remained arguments would be gather from URI query. (?args=key:myId)
+         * 
+         * Some commands like 'make:migration' has an argument called 'name',
+         * these kind of commands actually create files, but not classes. So
+         * they will NOT be considered as Generator commands. Although, they
+         * need arguments to perform on. Consequently we search for 'name' key
+         * in command's arguments.
+         */
+        if (
+            $command->isGenerator()
+            || in_array("name", $command->getArguments())
+        ) {
+            return "{name}";
+        }
+
+        return "";
     }
 }

@@ -3,10 +3,12 @@
 /*
  * This file is part of the Artisan-Http package.
  *
- * (c) Alireza Far <aariow01@gmail.com>
+ * (c) Alireza Farhanian <aariow01@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ * 
+ * @link https://github/aariow/artisan-http
  */
 
 namespace Artisan\Api;
@@ -21,20 +23,27 @@ class ArtisanApiManager
 
     protected Router $router;
 
+    protected $adapter;
+
     public function __construct($config = null)
     {
         $this->commands = new CommandsCollection;
 
-        $adapter = new RouteAdapter($this->commands);
+        $this->adapter = new RouteAdapter($this->commands);
 
-        $this->router = new Router($adapter);
+        $this->router = new Router($this->adapter);
 
         return $this;
     }
 
-    public function generateRoutes()
+    /**
+     * Get Router instance
+     *
+     * @return Router
+     */
+    public function router(): Router
     {
-        $this->router->generate();
+        return $this->router;
     }
 
     /**
