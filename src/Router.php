@@ -3,6 +3,7 @@
 namespace Artisan\Api;
 
 use Artisan\Api\Controllers\RunCommandController;
+use Illuminate\Support\Str;
 
 /**
  * This class is responsible to add routes dynamiccaly and perform related
@@ -63,7 +64,9 @@ class Router
         $this->method = config('artisan.api.method');
         $this->prefix = config('artisan.api.prefix');
 
-        $this->forbiddenRoutes = array_merge(config('artisan.forbidden-routes'), $this->forbiddenRoutes);
+        $this->forbiddenRoutes = config('artisan.forbidden-routes');
+
+        // $this->setForbiddenCommands();
 
         return $this;
     }
@@ -93,9 +96,14 @@ class Router
             // Add dynamic routes for each command
             foreach ($this->adapter->getCommands()->all() as $command) {
 
-                // Prevents to add forbidden routes
-                if (in_array($command->getName(), $this->getForbiddenRoutes()))
-                    continue;
+                $commandName = $command->getName();
+
+                foreach ($this->forbiddenRoutes as $route) {
+                    if (Str::is($route, $commandName)) {
+                        // Lead the flow to first loop, and exit from forbidden loop
+                        continue 2;
+                    }
+                }
 
                 // Prevents empty routes to be added from hidden commands
                 if (!$uri = $this->adapter->getUri($command, $withHiddens))
@@ -108,8 +116,6 @@ class Router
                 array_push($this->routes, $route->uri);
             }
         });
-
-        dd($this->getRoutes());
     }
 
     /**
@@ -141,13 +147,5 @@ class Router
     public function getStaticRoutes(): array
     {
         return $this->staticRoutes;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getForbiddenRoutes(): array
-    {
-        return $this->forbiddenRoutes;
     }
 }
