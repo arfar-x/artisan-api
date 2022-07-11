@@ -5,8 +5,27 @@ namespace Artisan\Api;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan as LaravelArtisan;
 
+/**
+ * This class is responsible to contain all commands in a collection.
+ * Implements Singleton design pattern.
+ */
 class CommandsCollection extends Collection
 {
+    /**
+     * Singleton instance
+     *
+     * @var self $_instance
+     */
+    protected static $_instance = null;
+
+    public static function getIntance()
+    {
+        if (is_null(self::$_instance)) {
+            return new self;
+        }
+
+        return self::$_instance;
+    }
 
     /**
      * Get all Artisan commands, then add them into $items

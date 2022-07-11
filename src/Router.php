@@ -3,7 +3,6 @@
 namespace Artisan\Api;
 
 use Artisan\Api\Controllers\RunCommandController;
-use Illuminate\Support\Str;
 
 /**
  * This class is responsible to add routes dynamiccaly and perform related
@@ -42,6 +41,7 @@ class Router
     protected array $staticRoutes = [
         '/all',     // Get all available commands via REST APIs by this package
         '/command', // Provide route to client to add binded command within HTTP request
+        '/docs',    // Show documents of available command through APIs
     ];
 
     /**
@@ -65,8 +65,6 @@ class Router
         $this->prefix = config('artisan.api.prefix');
 
         $this->forbiddenRoutes = config('artisan.forbidden-routes');
-
-        // $this->setForbiddenCommands();
 
         return $this;
     }
@@ -95,15 +93,6 @@ class Router
 
             // Add dynamic routes for each command
             foreach ($this->adapter->getCommands()->all() as $command) {
-
-                $commandName = $command->getName();
-
-                foreach ($this->forbiddenRoutes as $route) {
-                    if (Str::is($route, $commandName)) {
-                        // Lead the flow to first loop, and exit from forbidden loop
-                        continue 2;
-                    }
-                }
 
                 // Prevents empty routes to be added from hidden commands
                 if (!$uri = $this->adapter->getUri($command, $withHiddens))

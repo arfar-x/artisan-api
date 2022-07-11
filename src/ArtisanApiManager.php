@@ -27,7 +27,7 @@ class ArtisanApiManager
 
     public function __construct($config = null)
     {
-        $this->commands = new CommandsCollection;
+        $this->commands = CommandsCollection::getIntance();
 
         $this->adapter = new RouteAdapter($this->commands);
 
