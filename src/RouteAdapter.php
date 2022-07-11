@@ -62,9 +62,17 @@ class RouteAdapter
      */
     protected function toRoute($command)
     {
-        $commandName = str_replace(":", "/", $command->getName());
+        $commandName = $command->getName();
 
-        return $commandName;
+        /**
+         * If command's name follows 'make:model', then return '{command}/{subcommand}
+         * If it follows 'help' or 'list', then return '{command}
+         */
+        if (preg_match("/(.*):(.*)/", $commandName)) {
+            return "{command}/{subcommand}";
+        }
+        
+        return "{command}";
     }
 
     /**
@@ -94,5 +102,16 @@ class RouteAdapter
         }
 
         return "";
+    }
+
+    /**
+     * Get the generated name for route
+     *
+     * @param object $command
+     * @return string
+     */
+    public function toRouteName($command)
+    {
+        return str_replace(":", ".", $command->getName());
     }
 }

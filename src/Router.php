@@ -109,7 +109,7 @@ class Router
                 if (!$uri = $this->adapter->getUri($command, $withHiddens))
                     continue;
 
-                $name = $namePrefix . str_replace(":", ".", $command->getName());
+                $name = $namePrefix . $this->adapter->toRouteName($command);
 
                 $route = $router->addRoute($this->method, $uri, $this->getAction())->name($name);
 
