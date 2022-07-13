@@ -19,19 +19,13 @@ class ArtisanApiManager
 
     const VERSION = "1.0.0";
 
-    protected CommandsCollection $commands;
-
     protected Router $router;
 
-    protected $adapter;
-
-    public function __construct($config = null)
+    public function __construct()
     {
-        $this->commands = CommandsCollection::getIntance();
+        Adapter::init(CommandsCollection::getIntance());
 
-        $this->adapter = new RouteAdapter($this->commands);
-
-        $this->router = new Router($this->adapter);
+        $this->router = new Router;
 
         return $this;
     }
@@ -53,6 +47,6 @@ class ArtisanApiManager
      */
     public function get()
     {
-        return $this->commands->all();
+        return CommandsCollection::getIntance()->all();
     }
 }

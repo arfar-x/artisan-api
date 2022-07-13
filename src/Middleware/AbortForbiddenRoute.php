@@ -2,6 +2,7 @@
 
 namespace Artisan\Api\Middleware;
 
+use Artisan\Api\Adapter;
 use Closure;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,7 @@ class AbortForbiddenRoute
      */
     public function handle($request, Closure $next)
     {
-        $command = $this->getCommand($request);
+        $command = Adapter::toCommand($request->command, $request->subcommand);
         
         foreach (config('artisan.forbidden-routes') as $route) {
             if (Str::is($route, $command)) {
@@ -26,23 +27,5 @@ class AbortForbiddenRoute
         }
 
         return $next($request);
-    }
-
-    /**
-     * Check if the command has subcommand then return it.
-     *
-     * @param $request
-     * @return void
-     */
-    protected function getCommand($request)
-    {
-        $command = $request->command ?? null;
-        $subcommand = $request->subcommand ?? null;
-
-        if ($subcommand) {
-            return "$command:$subcommand";
-        }
-
-        return $command;
     }
 }

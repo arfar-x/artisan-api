@@ -12,14 +12,6 @@ class Router
 {
 
     /**
-     * Adapter to translate each commad's attributes into readable string
-     * for Laravel routing system
-     *
-     * @var RouteAdapter
-     */
-    protected RouteAdapter $adapter;
-
-    /**
      * Default HTTP method; can be set within config/artisan.php
      *
      * @var string|array
@@ -47,13 +39,10 @@ class Router
     /**
      * Initialize necessary parameters
      *
-     * @param RouteAdapter $adapter
      * @return self
      */
-    public function __construct(RouteAdapter $adapter)
+    public function __construct()
     {
-        $this->adapter = $adapter;
-
         $this->method = config('artisan.api.method');
         $this->prefix = config('artisan.api.prefix');
 
@@ -85,10 +74,10 @@ class Router
             }
 
             // Add dynamic routes for each command
-            foreach ($this->adapter->getCommands()->all() as $command) {
+            foreach (Adapter::getCommands()->all() as $command) {
 
                 // Prevents empty routes to be added from hidden commands
-                if (!$uri = $this->adapter->getUri($command, $withHiddens))
+                if (!$uri = Adapter::toUri($command, $withHiddens))
                     continue;
 
                 $route = $router->addRoute($this->method, $uri, $this->getAction());
