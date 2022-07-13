@@ -47,7 +47,7 @@ class ArtisanApiManager
     }
 
     /**
-     * TODO This is method is only for debugging and should be removed
+     * !! TODO This is method is only for debugging and should be removed
      *
      * @return Collection
      */
@@ -55,10 +55,4 @@ class ArtisanApiManager
     {
         return $this->commands->all();
     }
-
-    /**
-     * TODO useful features:
-     *  1. Ability to modify 'api.prefix'
-     *  2. Working with hidden commands
-     */
 }

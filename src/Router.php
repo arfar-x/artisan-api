@@ -45,13 +45,6 @@ class Router
     ];
 
     /**
-     * These routes will NOT be added to routes; They can be set within config/artisan.php
-     *
-     * @var array
-     */
-    protected array $forbiddenRoutes = [];
-
-    /**
      * Initialize necessary parameters
      *
      * @param RouteAdapter $adapter
@@ -79,16 +72,16 @@ class Router
     public function generate(bool $withHiddens = false)
     {
         $routeConfig = [
-            'prefix' => $this->prefix
+            'prefix' => $this->prefix,
+            'middleware' => ['api', 'artisan.api']
         ];
 
-        app('router')->group($routeConfig, function ($router) use ($withHiddens) {
-
-            $namePrefix = 'artisan.api.';
+        app('router')
+            ->group($routeConfig, function ($router) use ($withHiddens) {
 
             // Add static routes
             foreach ($this->getStaticRoutes() as $route) {
-                $router->addRoute($this->method, $route, $this->getAction())->name($namePrefix . $route);
+                $router->addRoute($this->method, $route, $this->getAction());
             }
 
             // Add dynamic routes for each command
@@ -98,9 +91,7 @@ class Router
                 if (!$uri = $this->adapter->getUri($command, $withHiddens))
                     continue;
 
-                $name = $namePrefix . $this->adapter->toRouteName($command);
-
-                $route = $router->addRoute($this->method, $uri, $this->getAction())->name($name);
+                $route = $router->addRoute($this->method, $uri, $this->getAction());
 
                 array_push($this->routes, $route->uri);
             }

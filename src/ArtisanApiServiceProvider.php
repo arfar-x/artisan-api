@@ -13,14 +13,25 @@
 
 namespace Artisan\Api;
 
-use Artisan\Api\Console\UpCommand;
 use Artisan\Api\Facades\ArtisanApi;
+use Artisan\Api\Middleware\AbortForbiddenRoute;
 use Artisan\Api\Middleware\CheckEnvMode;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
 {
+    private array $middlewares = [
+        'forbidden' => AbortForbiddenRoute::class,
+        'env'       => CheckEnvMode::class,
+    ];
+
+    private array $commands = [
+        Artisan\Api\Console\UpCommand::class,
+    ];
+
+    /**
+     * @inheritDoc
+     */
     public function register()
     {
 
@@ -31,8 +42,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
         ]);
 
         /**
-         * Prevents application to apply package to container.
-         * 
+         * Prevents application to apply package to container while auto-run is disabled.
          * This can be modified in config/artisan.php
          */
         if (!config('artisan.auto-run')) return;
@@ -41,50 +51,40 @@ class ArtisanApiServiceProvider extends ServiceProvider
             return new ArtisanApiManager;
         });
 
+        // Registers Facade
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('ArtisanApi', ArtisanApi::class);
-
-        /**
-         * Publish Events and Listeners
-         *
-         * Add necessary commands to Artisan:
-         *      like:
-         *          php artisan api:generate,
-         *          php artisan api:list,
-         *          php artisan api:up | php artisan api:enable
-         *          php artisan api:down | php artisan api:disable
-         */
     }
 
+    /**
+     * @inheritDoc
+     */
     public function boot()
     {
-        //        $configPath = __DIR__ . '/../config/artisan.php';
-        //        $this->publishes([$configPath => config_path('artisan.php')], 'config');
-
-        //        $kernel->pushMiddleware(CheckEnvMode::class);
-        $this->app->make('router')
-            ->aliasMiddleware('artisan.api.env', CheckEnvMode::class)
-            ->pushMiddlewareToGroup('api', CheckEnvMode::class);
-
         $this->app->make('artisan.api')
             ->router()->generate();
 
+        $this->setMiddlewares();
+
         /**
          * Register the commands if the application is running via CLI
-         *
-         * This is useful while working with Artisan or CLI, otherwise while using
-         * HTTP clients (like browsers and APIs), these commands will not be imported.
-         * Also can affect on application performance.
          */
         if ($this->app->runningInConsole()) {
-            $this->commands($this->getCommands());
+            $this->commands($this->commands);
         }
     }
 
-    private function getCommands(): array
+    /**
+     * Set route middlewares
+     *
+     * @return void
+     */
+    private function setMiddlewares()
     {
-        return [
-            UpCommand::class
-        ];
+        foreach ($this->middlewares as $key => $middleware) {
+            $this->app->make('router')
+                ->aliasMiddleware($key, $middleware)
+                ->pushMiddlewareToGroup('artisan.api', $middleware);
+        }
     }
 }

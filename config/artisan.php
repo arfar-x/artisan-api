@@ -25,6 +25,7 @@ return [
      |
      */
     'forbidden-routes' => [
+        'clear-compiled',
         'tinker',
         'up',
         'down',
