@@ -38,3 +38,10 @@ public function handle()
 }
 ...
 ```
+
+## TODO
+- Convert dealing with arguments in query string to arrays:
+  - from /artisan/api/SomeCommand?args=arg1:value1,arg2:value2,...
+  - to /artisan/api/SomeCommand?arg[arg1]=value1,$arg[arg2]=value2,...
+- Implement a way to deal with interactive commands like `tinker`
+- Make response more readable for users, (remove "\n", ...)

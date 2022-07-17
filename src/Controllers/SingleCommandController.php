@@ -3,9 +3,9 @@
 namespace Artisan\Api\Controllers;
 
 use Artisan\Api\Caller;
+use Artisan\Api\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 
 class SingleCommandController extends BaseController implements CommandControllerInterface
 {
@@ -22,6 +22,6 @@ class SingleCommandController extends BaseController implements CommandControlle
             "subcommand" => $subcommand
         ], $arguments, $options);
 
-        return $output;
+        return Response::json();
     }
 }

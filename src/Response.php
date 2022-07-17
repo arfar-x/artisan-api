@@ -10,7 +10,7 @@ class Response
 {
     private static string $output;
 
-    private static string $status;
+    private static int $status;
     /**
      * Somthing like:
      *
@@ -39,10 +39,20 @@ class Response
         self::$status = $status;
     }
 
-    public static function json()
+    public static function error(string $error, $status = null)
     {
-        return response()->json([
+        self::setOutput($error, $status);
+    }
+
+    public static function json(array $data = [])
+    {
+        $ok = (self::$status == 200) ? true : false;
+
+        $data = $data ?: [
+            "ok" => $ok,
             'output' => self::$output
-        ], self::$status);
+        ];
+
+        return response()->json($data, self::$status);
     }
 }

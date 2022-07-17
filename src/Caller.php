@@ -41,14 +41,14 @@ class Caller
             if ($exitCode != 0)
                 throw new \Exception("something went wrong while runnig command '$command'.");
 
-            Response::setOutput(Artisan::output());
+            Response::setOutput(Artisan::output(), 200);
             
         } catch (CommandNotFoundException) {
-            abort(404);
+            Response::error("Command called by API not found.", 404);
         } catch (InvalidArgumentException) {
-            abort(500);
+            Response::error("Argument(s) given by an invalid format.", 500);
         } catch (InvalidOptionException) {
-            abort(500);
+            Response::error("Options(s) given by an invalid format.", 500);
         }
 
         return Response::getOutput();
