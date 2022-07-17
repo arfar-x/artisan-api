@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-class RunCommandController extends BaseController
+class GeneratorCommandController extends BaseController implements CommandControllerInterface
 {
     public function run(Request $request)
     {

@@ -8,6 +8,9 @@ namespace Artisan\Api;
  */
 class Response
 {
+    private static string $output;
+
+    private static string $status;
     /**
      * Somthing like:
      *
@@ -19,4 +22,27 @@ class Response
      *      "output": "ArticleController controller created successfully",
      * }
      */
+
+    public static function setOutput(string $output, $status = null)
+    {
+        self::$output = $output;
+        self::$status = $status ?: $status;
+    }
+
+    public static function getOutput()
+    {
+        return self::$output;
+    }
+
+    public static function setStatus(int $status)
+    {
+        self::$status = $status;
+    }
+
+    public static function json()
+    {
+        return response()->json([
+            'output' => self::$output
+        ], self::$status);
+    }
 }

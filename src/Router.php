@@ -2,7 +2,9 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Controllers\GeneratorCommandController;
 use Artisan\Api\Controllers\RunCommandController;
+use Artisan\Api\Controllers\SingleCommandController;
 
 /**
  * This class is responsible to add routes dynamiccaly and perform related
@@ -80,7 +82,7 @@ class Router
                 if (!$uri = Adapter::toUri($command, $withHiddens))
                     continue;
 
-                $route = $router->addRoute($this->method, $uri, $this->getAction());
+                $route = $router->addRoute($this->method, $uri, $this->getAction($command));
 
                 array_push($this->routes, $route->uri);
             }
@@ -88,18 +90,19 @@ class Router
     }
 
     /**
-     * Get action to be run when route reached
-     *
+     * Get action to be run when route reached.
+     * Here we return controller to do actions for cleaner code,
+     * we can still use a Closure function to do actions.
+     * 
      * @param $command
      * @return array
      */
-    protected function getAction()
+    protected function getAction($command = null)
     {
-        /**
-         * Here we return controller to do actions for cleaner code,
-         * we can still use a Closure function to do actions.
-         */
-        return [RunCommandController::class, 'run'];
+        if ($command && Adapter::isGenerator($command))
+            return [GeneratorCommandController::class, 'run'];
+
+        return [SingleCommandController::class, 'run'];
     }
 
     /**

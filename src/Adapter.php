@@ -4,7 +4,8 @@ namespace Artisan\Api;
 
 /**
  * This class is responsible to extract necessary parameters for dynamic routing.
- * Implements Adapter design pattern.
+ * Implements Adapter design pattern. Actually, this class is a joint between commands
+ * and their routes.
  */
 class Adapter
 {
@@ -74,10 +75,7 @@ class Adapter
              * need arguments to perform on. Consequently we search for 'name' key
              * in command's arguments.
              */
-            if (
-                $command->isGenerator()
-                || in_array("name", $command->getArguments())
-            ) {
+            if (self::isGenerator($command)) {
                 return "{name}";
             }
 
@@ -87,6 +85,17 @@ class Adapter
         $uri = $route() . "/" . $arguments();
 
         return $uri;
+    }
+
+    /**
+     * Check if command is generator
+     *
+     * @param object $command
+     * @return boolean
+     */
+    public static function isGenerator($command)
+    {
+        return $command->isGenerator() || in_array("name", $command->getArguments());
     }
 
     /**
@@ -103,5 +112,66 @@ class Adapter
         }
 
         return $command;
+    }
+
+    /**
+     * Turn argument's string into the following format
+     * 
+     * ["name" => ArgumentValue]
+     * 
+     * @param string $arguments
+     * @return array
+     */
+    public static function toArguments($arguments)
+    {
+        $array = self::separator($arguments);
+
+        return $array;
+    }
+
+    /**
+     * Turn option's string into the following format
+     * 
+     * ["--model" => OptionValue]
+     * 
+     * @param string $options
+     * @return array
+     */
+    public static function toOptions($options)
+    {
+        $array = self::separator($options);
+
+        $keys = array_keys($array);
+        $values = array_values($array);
+
+        foreach ($keys as &$key) {
+            if (strlen($key) == 1)
+                $key = "-$key";
+            else
+                $key = "--$key";
+        }
+
+        return array_combine($keys, $values);
+    }
+
+    protected static function separator(string $string): array
+    {
+        $array = [];
+
+        foreach (explode(",", $string) as $argv) {
+
+            if (strpos($argv, ":")) {
+                // If argv has ':', then extract it
+                $argsArray = explode(":", $argv);
+            } else {
+                // If argv does not have ':', then return its value as true
+                $argsArray = [$argv, true];
+            }
+
+            $array[$argsArray[0]] = $argsArray[1];
+
+        }
+
+        return $array;
     }
 }
