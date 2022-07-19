@@ -1,11 +1,11 @@
 {
-    "name": "aariow/artisan-http",
+    "name": "aariow/artisan-api",
     "description": "Run Artisan commands through APIs and HTTP requests safely",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
-            "name": "Alireza Far",
+            "name": "Alireza Farhanian",
             "email": "aariow01@gmail.com"
         }
     ],

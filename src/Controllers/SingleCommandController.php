@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class SingleCommandController extends BaseController implements CommandControllerInterface
 {
+    /**
+     * Run simple commands which are not generators
+     *
+     * @param Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
     public function run(Request $request)
     {
         $command = $request->command ?? null;
@@ -17,7 +23,7 @@ class SingleCommandController extends BaseController implements CommandControlle
         $arguments = $request->query('args');
         $options = $request->query('options');
 
-        $output = Caller::call([
+        Caller::call([
             "command" => $command,
             "subcommand" => $subcommand
         ], $arguments, $options);

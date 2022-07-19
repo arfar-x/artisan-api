@@ -2,41 +2,39 @@
 
 namespace Artisan\Api\Controllers;
 
+use Artisan\Api\Caller;
+use Artisan\Api\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 
 class GeneratorCommandController extends BaseController implements CommandControllerInterface
 {
+    /**
+     * Run commands which are generators
+     *
+     * @param Request $request
+     * @return Illuminate\Http\JsonResponse
+     */
     public function run(Request $request)
     {
         $command = $request->command ?? null;
         $subcommand = $request->subcommand ?? null;
-        $name = $request->name ?? null;
 
-        if ($subcommand) {
-            $command = $request->command . ":" . $request->subcommand;
-        }
+        $name = $request->name ? "name:" . $request->name : null;
 
-        if (is_null($name))
-        {
-            $parameters = [];
+        if ($arguments = $request->query('args')) {
+            $arguments = $name . "," . $arguments;
         } else {
-            $parameters = ["name" => $name];
+            $arguments = $name;
         }
 
-        Artisan::call($command, $parameters);
+        $options = $request->query('options');
 
-        $output = Artisan::output();
-
-        dd([
+        Caller::call([
             "command" => $command,
-            "subcommand" => $subcommand,
-            "argument_name" => $name,
-            "output" => $output,
-            "request" => ["path" => $request->path(),
-            "calledIn" => class_basename($this) . "@" . __FUNCTION__,
-            "Method" => $request->method()]
-        ]);
+            "subcommand" => $subcommand
+        ], $arguments, $options);
+
+        return Response::json();
     }
 }

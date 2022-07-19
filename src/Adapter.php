@@ -154,6 +154,13 @@ class Adapter
         return array_combine($keys, $values);
     }
 
+    /**
+     * Seprate strings with the format of 'key:value,key2:value2'
+     * into an associative array
+     *
+     * @param string $string
+     * @return array
+     */
     protected static function separator(string $string): array
     {
         $array = [];

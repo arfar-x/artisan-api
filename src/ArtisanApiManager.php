@@ -1,14 +1,14 @@
 <?php
 
 /*
- * This file is part of the Artisan-Http package.
+ * This file is part of the Artisan-Api package.
  *
  * (c) Alireza Farhanian <aariow01@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  * 
- * @link https://github/aariow/artisan-http
+ * @link https://github/aariow/artisan-api
  */
 
 namespace Artisan\Api;
@@ -38,15 +38,5 @@ class ArtisanApiManager
     public function router(): Router
     {
         return $this->router;
-    }
-
-    /**
-     * !! TODO This is method is only for debugging and should be removed
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        return CommandsCollection::getIntance()->all();
     }
 }

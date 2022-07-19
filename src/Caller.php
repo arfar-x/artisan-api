@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
+use Symfony\Component\Console\Exception\RuntimeException;
 
+/**
+ * This class is reponsible to call commands.
+ */
 class Caller
 {
     /**
@@ -39,16 +43,18 @@ class Caller
 
             // exit code `0` means everything works fine
             if ($exitCode != 0)
-                throw new \Exception("something went wrong while runnig command '$command'.");
+                throw new \Exception("Something went wrong while runnig command '$command'.");
 
             Response::setOutput(Artisan::output(), 200);
             
         } catch (CommandNotFoundException) {
-            Response::error("Command called by API not found.", 404);
+            Response::error("Command '$command' called by API not found.", 404);
         } catch (InvalidArgumentException) {
-            Response::error("Argument(s) given by an invalid format.", 500);
+            Response::error("Argument(s) '". implode(', ', $arguments) ."' given by an invalid format.", 500);
         } catch (InvalidOptionException) {
-            Response::error("Options(s) given by an invalid format.", 500);
+            Response::error("Options(s) '". implode(', ', $options) ."' given by an invalid format.", 500);
+        } catch (RuntimeException $e) {
+            Response::error($e->getMessage(), 500);
         }
 
         return Response::getOutput();
