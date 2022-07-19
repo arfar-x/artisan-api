@@ -7,10 +7,15 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+
+    protected $prefix;
+
     public function setUp(): void
     {
         parent::setUp();
         // additional setup
+
+        $this->apiPrefix = config("artisan.api.prefix");
     }
 
     protected function getPackageProviders($app)
