@@ -19,6 +19,14 @@
             "Artisan\\Api\\Tests\\": "tests/"
         }
     },
+    "require": {
+        "php": "^8.0",
+        "illuminate/collections": "^9.21",
+        "illuminate/console": "^9.21",
+        "illuminate/routing": "^9.21",
+        "illuminate/support": "^9.21",
+        "illuminate/http": "^9.21"
+    },
     "require-dev": {
         "orchestra/testbench": "^7.6",
         "phpunit/phpunit": "^9.5"
@@ -33,7 +41,7 @@
             }
         },
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1.0-dev"
         }
     },
     "scripts": {

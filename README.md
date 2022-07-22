@@ -5,8 +5,7 @@
 ---
 
 ![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/aariow/artisan-api) ![GitHub](https://img.shields.io/github/license/aariow/artisan-api) ![Packagist Version](https://img.shields.io/packagist/v/aariow/artisan-api?label=version) ![GitHub branch checks state](https://img.shields.io/github/checks-status/aariow/artisan-api/master?label=branch)
-![Packagist Downloads](https://img.shields.io/packagist/dm/aariow/artisan-api?label=Packagist%20downloads) ![GitHub all releases](https://img.shields.io/github/downloads/aariow/artisan-api/total?label=Github%20downloads)
-[![GitHub release](https://img.shields.io/github/release/aariow/artisan-api)](https://GitHub.com/arriow/artisan-api/releases/) ![tests-passed-green](https://img.shields.io/badge/test-passed-green) ![GitHub repo size](https://img.shields.io/github/repo-size/aariow/artisan-api?label=size)
+![Packagist Downloads](https://img.shields.io/packagist/dm/aariow/artisan-api?label=Packagist%20downloads) ![GitHub all releases](https://img.shields.io/github/downloads/aariow/artisan-api/total?label=Github%20downloads) ![tests-passed-green](https://img.shields.io/badge/test-passed-green) ![GitHub repo size](https://img.shields.io/github/repo-size/aariow/artisan-api?label=size)
 
 ![Linkedin URL](https://img.shields.io/badge/Linkedin-aariow-blue?style=social&logo=linkedin&url=linkedin.com/in/aariow)
 
@@ -76,7 +75,7 @@ And for **Generator** commands the endpoint is:
 https://domain.com/artisan/api/{command}/{subcommand}/{name}?args=key1:value1,key2:value2&options=opt1:value1,opt2
 ```
 
-**Pay attention that there is a `name` variable. As all Generator commands need an argument called `name`, this need to be specified by what you desire.**
+**Pay attention that there is a `name` variable. As all Generator commands need an argument called `name`, this needs to be specified by what you desire.**
 
 \
 Command Examples:
@@ -124,9 +123,8 @@ https://domain.com/artisan/api/make/model/MyModel?options=controller,f
 After calling an endpoint, you will receive a `Json` response.
 
 ##### Successful
-When everything works perfectly:
+When everything works perfectly: `status : 200 OK`
 ```json
-// status : 200 OK
 {
   ok: true,
   status: 200,
@@ -135,9 +133,8 @@ When everything works perfectly:
 ```
 
 ##### Not found
-When inputed command is not found by application:
+When inputed command is not found by application: `status : 404 Not Found`
 ```json
-// status : 404 Not Found
 {
   ok: false,
   status: 404,
@@ -146,9 +143,8 @@ When inputed command is not found by application:
 ```
 
 ##### Invalid Arguments format
-When arguments are given by an invalid format:
+When arguments are given by an invalid format: `status : 500 Server Error`
 ```json
-// status : 500 Server Error
 {
   ok: false,
   status: 500,
@@ -157,9 +153,8 @@ When arguments are given by an invalid format:
 ```
 
 ##### Invalid Options format:
-When options are given by an invalid format:
+When options are given by an invalid format: `status : 500 Server Error`
 ```json
-// status : 500 Server Error
 {
   ok: false,
   status: 500,
