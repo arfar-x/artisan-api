@@ -8,9 +8,21 @@ class AbortForbiddenRouteTest extends TestCase
 {
     public function testIfForbiddenRouteIsCalled()
     {
-        /**
-         * TODO Test if forbidden routes are inaccessible
-         */
-        $this->markTestIncomplete();
+        $forbiddenRoute = $this->apiPrefix . "/down";
+
+        $response = $this->post($forbiddenRoute);
+
+        $response->assertNotFound();
+    }
+
+    public function testValidCommandIsCalled()
+    {
+        $uri = $this->apiPrefix . "/help";
+
+        $response = $this->post($uri);
+
+        $response->assertOk();
+        $this->assertNotEmpty($response->getContent());
+        $this->assertJson($response->getContent());
     }
 }

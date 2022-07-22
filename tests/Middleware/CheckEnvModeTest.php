@@ -8,9 +8,22 @@ class CheckEnvModeTest extends TestCase
 {
     public function testMiddlewareRejectsProductionMode()
     {
-        /**
-         * TODO Test rejection if application is Production environment
-         */
-        $this->markTestIncomplete();
+        // Switch APP_ENV to 'production' temporarily, default is 'testing'
+        app()['env'] = "production";
+
+        $uri = $this->apiPrefix . "/help";
+
+        $response = $this->post($uri);
+
+        $response->assertNotFound();
+    }
+
+    public function testMiddlewareAllowsInDevelopmentMode()
+    {
+        $uri = $this->apiPrefix . "/help";
+
+        $response = $this->post($uri);
+
+        $response->assertOk();
     }
 }

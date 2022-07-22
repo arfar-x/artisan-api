@@ -19,10 +19,10 @@ class Response
      * @param int $status
      * @return void
      */
-    public static function setOutput(string $output, int $status = null)
+    public static function setOutput(string $output, int $status = 200)
     {
         self::$output = $output;
-        self::$status = $status ?: $status;
+        self::$status = $status;
     }
 
     /**
@@ -53,7 +53,7 @@ class Response
      * @param int $status
      * @return void
      */
-    public static function error(string $error, int $status = null)
+    public static function error(string $error, int $status = 500)
     {
         self::setOutput($error, $status);
     }

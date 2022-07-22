@@ -36,10 +36,11 @@ class Adapter
     /**
      * Get command name and return parsed translated URI for API routes
      *
-     * @param object $command
+     * @param Command $command
+     * @param bool $withHiddens
      * @return void|string
      */
-    public static function toUri($command, $withHiddens)
+    public static function toUri(Command $command, bool $withHiddens)
     {
         $commandName = $command->getName();
 

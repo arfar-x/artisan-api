@@ -3,7 +3,6 @@
 namespace Artisan\Api;
 
 use Artisan\Api\Controllers\GeneratorCommandController;
-use Artisan\Api\Controllers\RunCommandController;
 use Artisan\Api\Controllers\SingleCommandController;
 
 /**
@@ -87,6 +86,8 @@ class Router
                 array_push($this->routes, $route->uri);
             }
         });
+
+        $this->routes = array_unique($this->routes);
     }
 
     /**

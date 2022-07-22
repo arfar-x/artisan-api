@@ -1,6 +1,6 @@
 {
     "name": "aariow/artisan-api",
-    "description": "Run Artisan commands through APIs and HTTP requests safely",
+    "description": "Execute Laravel Artisan commands via REST APIs and HTTP requests safely.",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -38,7 +38,7 @@
     },
     "scripts": {
         "test": [
-            "vendor/bin/phpunit"
+            "vendor/bin/phpunit tests/"
         ]
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
 /*
- * This file is part of the Artisan-Http package.
+ * This file is part of the Artisan-Api package.
  *
  * (c) Alireza Farhanian <aariow01@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  * 
- * @link https://github/aariow/artisan-http
+ * @link https://github/aariow/artisan-api
  */
 
 namespace Artisan\Api;
@@ -16,6 +16,7 @@ namespace Artisan\Api;
 use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\AbortForbiddenRoute;
 use Artisan\Api\Middleware\CheckEnvMode;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
@@ -26,7 +27,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
     ];
 
     private array $commands = [
-        Artisan\Api\Console\UpCommand::class,
+        // Artisan\Api\Console\Command::class
     ];
 
     /**
@@ -34,26 +35,13 @@ class ArtisanApiServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->publish();
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/artisan.php', 'artisan');
+        if ($this->shouldBeLoaded()) {
+            $this->bind();
+        }
 
-        $this->publishes([
-            __DIR__ . "/../config/artisan.php" => config_path('artisan.php')
-        ]);
-
-        /**
-         * Prevents application to apply package to container while auto-run is disabled.
-         * This can be modified in config/artisan.php
-         */
-        if (!config('artisan.auto-run')) return;
-
-        $this->app->bind('artisan.api', function () {
-            return new ArtisanApiManager;
-        });
-
-        // Registers Facade
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('ArtisanApi', ArtisanApi::class);
+        return;
     }
 
     /**
@@ -61,6 +49,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         $this->app->make('artisan.api')
             ->router()->generate();
 
@@ -72,6 +61,54 @@ class ArtisanApiServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands($this->commands);
         }
+    }
+
+    /**
+     * Bind service provider to the application container
+     *
+     * @return void
+     */
+    private function bind()
+    {
+        $this->app->bind('artisan.api', function () {
+            return new ArtisanApiManager;
+        });
+
+        // Registers Facade
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('ArtisanApi', ArtisanApi::class);
+    }
+
+    /**
+     * Publish all package related files
+     *
+     * @return void
+     */
+    private function publish()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/artisan.php', 'artisan');
+
+        $this->publishes([
+            __DIR__ . "/../config/artisan.php" => config_path('artisan.php')
+        ]);
+    }
+
+    /**
+     * Evaluate necessary conditions to check whether the package should be loaded or not
+     *
+     * @return boolean
+     */
+    private function shouldBeLoaded()
+    {
+        /**
+         * Prevents application to apply package to container while auto-run is disabled.
+         * This can be modified in config/artisan.php
+         */
+        if (!config('artisan.auto-run')) return false;
+
+        if (App::isProduction()) return false;
+
+        return true;
     }
 
     /**

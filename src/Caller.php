@@ -50,9 +50,21 @@ class Caller
         } catch (CommandNotFoundException) {
             Response::error("Command '$command' called by API not found.", 404);
         } catch (InvalidArgumentException) {
-            Response::error("Argument(s) '". implode(', ', $arguments) ."' given by an invalid format.", 500);
+
+            $argumentsKey = array_keys($arguments)[0];
+
+            $argumentsValue = array_values($arguments)[0];
+
+            Response::error("Argument(s) '$argumentsKey:$argumentsValue' given by an invalid format.", 500);
+            
         } catch (InvalidOptionException) {
-            Response::error("Options(s) '". implode(', ', $options) ."' given by an invalid format.", 500);
+
+            $optionsKey = array_keys($options)[0];
+
+            $optionsValue = array_values($options)[0];
+
+            Response::error("Options(s) '$optionsKey:$optionsValue' given by an invalid format.", 500);
+
         } catch (RuntimeException $e) {
             Response::error($e->getMessage(), 500);
         }

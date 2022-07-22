@@ -4,7 +4,7 @@ return [
 
     'api' => [
         'prefix' => "/artisan/api",
-        'method'    => ['GET', 'HEAD'],
+        'method'    => 'POST',
     ],
 
     'auto-run' => true,
