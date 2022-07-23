@@ -3,10 +3,14 @@
     "description": "Execute Laravel Artisan commands via REST APIs and HTTP requests safely.",
     "type": "project",
     "license": "MIT",
+    "version": "1.1.1",
+    "keywords": ["laravel", "artisan", "api", "rest", "http", "php", "command"],
+    "minimum-stability": "beta",
     "authors": [
         {
             "name": "Alireza Farhanian",
-            "email": "aariow01@gmail.com"
+            "email": "aariow01@gmail.com",
+            "role": "Creator"
         }
     ],
     "autoload": {
@@ -20,7 +24,7 @@
         }
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.0.2",
         "illuminate/collections": "^9.21",
         "illuminate/console": "^9.21",
         "illuminate/routing": "^9.21",

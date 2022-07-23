@@ -1,11 +1,11 @@
 <span style="text-align: center">
   <h1 style="color: #2e2e2e">Artisan Api</h1>
+  <p style="color: gray">Artisan commands with HTTP</p>
 </span>
 
 ---
 
-![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/aariow/artisan-api) ![GitHub](https://img.shields.io/github/license/aariow/artisan-api) ![Packagist Version](https://img.shields.io/packagist/v/aariow/artisan-api?label=version) ![GitHub branch checks state](https://img.shields.io/github/checks-status/aariow/artisan-api/master?label=branch)
-![Packagist Downloads](https://img.shields.io/packagist/dm/aariow/artisan-api?label=Packagist%20downloads) ![GitHub all releases](https://img.shields.io/github/downloads/aariow/artisan-api/total?label=Github%20downloads) ![tests-passed-green](https://img.shields.io/badge/test-passed-green) ![GitHub repo size](https://img.shields.io/github/repo-size/aariow/artisan-api?label=size)
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/aariow/artisan-api) ![GitHub](https://img.shields.io/github/license/aariow/artisan-api) ![Packagist Version](https://img.shields.io/packagist/v/aariow/artisan-api?label=version) ![Packagist Downloads](https://img.shields.io/packagist/dm/aariow/artisan-api?label=Packagist%20downloads) ![GitHub all releases](https://img.shields.io/github/downloads/aariow/artisan-api/total?label=Github%20downloads) ![GitHub repo size](https://img.shields.io/github/repo-size/aariow/artisan-api?label=size)
 
 ![Linkedin URL](https://img.shields.io/badge/Linkedin-aariow-blue?style=social&logo=linkedin&url=linkedin.com/in/aariow)
 
@@ -29,9 +29,8 @@ Here we brought REST API solution for you.**
   - **[API Prefix and HTTP Method](#api-prefix-and-http-method)**
   - **[Auto Run](#auto-run)**
 - **[Middlewares](#middlewares)**
-- **[Running Tests](#tests)**
-- **[Useful tips](#tips)**
-- **[Todo]($todo)**
+- **[Useful tips](#useful-tips)**
+- **[Todo](#todo)**
 
 
 ### Get Started
@@ -233,6 +232,6 @@ There are two middlewares in **Artisan-Api**.
 
 ### Todo
 1. It'd better be done to take `args` and `options`  in query string, to be array.
-   - Like: `?arg[key1]=value1&arg[key2]=value2 (it is a more standard way to deal with query string values)
+   - Like: `?arg[key1]=value1&arg[key2]=value2` (it is a more standard way to deal with query string values)
 2. Implement a way to deal with interactive commands like `tinker` (maybe can be implemented by socket)
 3. Make response more readable for users, (remove "\n", ...)
