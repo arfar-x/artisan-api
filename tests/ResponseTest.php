@@ -23,12 +23,12 @@ class ResponseTest extends TestCase
             "output" => $this->message
         ];
 
-        Response::setOutput($this->message, 200);
+        Response::getInstance()->setOutput($this->message, 200);
     }
 
     public function testOutputIsSet()
     {
-        $output = Response::getOutput();
+        $output = Response::getInstance()->getOutput();
 
         $this->assertIsString($output);
         $this->assertStringContainsString($output, $this->message);
@@ -36,7 +36,7 @@ class ResponseTest extends TestCase
 
     public function testForResponseFormat()
     {
-        $data = Response::json()->getData(assoc: true);
+        $data = Response::getInstance()->json()->getData(assoc: true);
 
         $this->assertIsArray($data);
         $this->assertEquals($this->data, $data);
@@ -44,14 +44,14 @@ class ResponseTest extends TestCase
 
     public function testResponseIsJson()
     {
-        $data = Response::json()->getContent();
+        $data = Response::getInstance()->json()->getContent();
 
         $this->assertJson($data);
     }
 
     public function testStatusCodeIsSent()
     {
-        $jsonObj = Response::json();
+        $jsonObj = Response::getInstance()->json();
 
         $data = $jsonObj->getData(assoc: true);
 
@@ -64,7 +64,7 @@ class ResponseTest extends TestCase
 
     public function testResponseIsInstanceOfJsonResponse()
     {
-        $data = Response::json();
+        $data = Response::getInstance()->json();
 
         $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $data);
     }

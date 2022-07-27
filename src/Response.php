@@ -2,15 +2,20 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Traits\Singleton;
+
 /**
  * This class is responsible to handle Artisan commands,
  * and send $output of each command to the client; in a Json format.
  */
 class Response
 {
-    private static string $output;
 
-    private static int $status;
+    use Singleton;
+
+    private string $output = "";
+
+    private int $status = 500;
 
     /**
      * Set the given output.
@@ -19,10 +24,10 @@ class Response
      * @param int $status
      * @return void
      */
-    public static function setOutput(string $output, int $status = 200)
+    public function setOutput(string $output, int $status = 200)
     {
-        self::$output = $output;
-        self::$status = $status;
+        $this->output = $output;
+        $this->status = $status;
     }
 
     /**
@@ -30,9 +35,9 @@ class Response
      *
      * @return string
      */
-    public static function getOutput()
+    public function getOutput()
     {
-        return self::$output;
+        return $this->output;
     }
 
     /**
@@ -41,9 +46,9 @@ class Response
      * @param integer $status
      * @return void
      */
-    public static function setStatus(int $status)
+    public function setStatus(int $status)
     {
-        self::$status = $status;
+        $this->status = $status;
     }
 
     /**
@@ -53,9 +58,9 @@ class Response
      * @param int $status
      * @return void
      */
-    public static function error(string $error, int $status = 500)
+    public function error(string $error, int $status = 500)
     {
-        self::setOutput($error, $status);
+        $this->setOutput($error, $status);
     }
 
     /**
@@ -64,16 +69,16 @@ class Response
      * @param array $data
      * @return Illuminate\Http\JsonResponse
      */
-    public static function json(array $data = [])
+    public function json(array $data = [])
     {
-        $ok = (self::$status == 200) ? true : false;
+        $ok = ($this->status == 200) ? true : false;
 
         $data = $data ?: [
             "ok" => $ok,
-            "status" => self::$status,
-            'output' => self::$output
+            "status" => $this->status,
+            'output' => $this->output
         ];
 
-        return response()->json($data, self::$status);
+        return response()->json($data, $this->status);
     }
 }

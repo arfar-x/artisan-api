@@ -1,10 +1,10 @@
 <?php
 
-namespace Artisan\Api\Controllers;
+namespace Artisan\Api\Contracts;
 
 use Illuminate\Http\Request;
 
-interface CommandControllerInterface
+interface ControllerInterface
 {
     public function run(Request $request);
 }

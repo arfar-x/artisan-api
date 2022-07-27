@@ -15,7 +15,7 @@ class AdapterTest extends TestCase
     {
         parent::setUp();
 
-        $this->collection = CommandsCollection::getIntance();
+        $this->collection = CommandsCollection::getInstance();
 
         Adapter::init($this->collection);
     }

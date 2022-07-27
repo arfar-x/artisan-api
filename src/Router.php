@@ -44,8 +44,8 @@ class Router
      */
     public function __construct()
     {
-        $this->method = config('artisan.api.method');
-        $this->prefix = config('artisan.api.prefix');
+        $this->method = config('artisan.api.method', ['POST']);
+        $this->prefix = config('artisan.api.prefix', '/artisan/api');
 
         $this->forbiddenRoutes = config('artisan.forbidden-routes');
 

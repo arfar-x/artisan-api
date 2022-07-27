@@ -10,19 +10,53 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
  */
 class Command
 {
+    /**
+     * Command name like 'make:mode'
+     *
+     * @var string
+     */
     protected $name;
 
+    /**
+     * Command object
+     *
+     * @var SymfonyCommand
+     */
     protected $class;
 
+    /**
+     * Arguments geiven from command object
+     * 
+     * @var array
+     */
     protected array $arguments;
 
+    /**
+     * Options geiven from command object
+     * @var array
+     */
     protected array $options;
 
+    /**
+     * Check command if generator type
+     * 
+     * @var bool
+     */
     protected bool $generator;
 
+    /**
+     * Check command if is hidden and not listed
+     * @var array
+     */
     protected bool $hidden;
 
-    public function __construct($command, SymfonyCommand $class)
+    /**
+     * Initializing stage
+     *
+     * @param string $command
+     * @param SymfonyCommand $class
+     */
+    public function __construct(string $command, SymfonyCommand $class)
     {
         $this->name = $command;
         $this->class = $class;
@@ -35,27 +69,54 @@ class Command
         return $this;
     }
 
+    /**
+     * Get command object as self class
+     *
+     * @return object
+     */
     public function getCommand()
     {
         return $this;
     }
 
+    /**
+     * Get command name as string
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Get class as both object and string
+     * Returned object is an instance of Laravel command
+     *
+     * @param boolean $toObject
+     * @return object|string
+     */
     public function getClass(bool $toObject = false)
     {
         return $toObject ? $this->class
             : $this->class::class;
     }
 
+    /**
+     * Get arguments extracted from command object
+     *
+     * @return array
+     */
     public function getArguments()
     {
         return $this->arguments;
     }
 
+    /**
+     * Get options extracted from command object
+     *
+     * @return array
+     */
     public function getOptions()
     {
         return $this->options;

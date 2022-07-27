@@ -45,17 +45,17 @@ class Caller
             if ($exitCode != 0)
                 throw new \Exception("Something went wrong while runnig command '$command'.");
 
-            Response::setOutput(Artisan::output(), 200);
+            Response::getInstance()->setOutput(Artisan::output(), 200);
             
         } catch (CommandNotFoundException) {
-            Response::error("Command '$command' called by API not found.", 404);
+            Response::getInstance()->error("Command '$command' called by API not found.", 404);
         } catch (InvalidArgumentException) {
 
             $argumentsKey = array_keys($arguments)[0];
 
             $argumentsValue = array_values($arguments)[0];
 
-            Response::error("Argument(s) '$argumentsKey:$argumentsValue' given by an invalid format.", 500);
+            Response::getInstance()->error("Argument(s) '$argumentsKey:$argumentsValue' given by an invalid format.", 500);
             
         } catch (InvalidOptionException) {
 
@@ -63,12 +63,12 @@ class Caller
 
             $optionsValue = array_values($options)[0];
 
-            Response::error("Options(s) '$optionsKey:$optionsValue' given by an invalid format.", 500);
+            Response::getInstance()->error("Options(s) '$optionsKey:$optionsValue' given by an invalid format.", 500);
 
         } catch (RuntimeException $e) {
-            Response::error($e->getMessage(), 500);
+            Response::getInstance()->error($e->getMessage(), 500);
         }
 
-        return Response::getOutput();
+        return Response::getInstance()->getOutput();
     }
 }

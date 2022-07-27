@@ -2,6 +2,7 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Traits\Singleton;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan as LaravelArtisan;
 
@@ -11,21 +12,8 @@ use Illuminate\Support\Facades\Artisan as LaravelArtisan;
  */
 class CommandsCollection extends Collection
 {
-    /**
-     * Singleton instance
-     *
-     * @var self $_instance
-     */
-    protected static $_instance = null;
 
-    public static function getIntance()
-    {
-        if (is_null(self::$_instance)) {
-            return new self;
-        }
-
-        return self::$_instance;
-    }
+    use Singleton;
 
     /**
      * Get all Artisan commands, then add them into $items

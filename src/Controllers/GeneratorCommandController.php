@@ -3,11 +3,12 @@
 namespace Artisan\Api\Controllers;
 
 use Artisan\Api\Caller;
+use Artisan\Api\Contracts\ControllerInterface;
 use Artisan\Api\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
-class GeneratorCommandController extends BaseController implements CommandControllerInterface
+class GeneratorCommandController extends BaseController implements ControllerInterface
 {
     /**
      * Run commands which are generators
@@ -35,6 +36,6 @@ class GeneratorCommandController extends BaseController implements CommandContro
             "subcommand" => $subcommand
         ], $arguments, $options);
 
-        return Response::json();
+        return Response::getInstance()->json();
     }
 }

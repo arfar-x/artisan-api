@@ -23,7 +23,7 @@ class ArtisanApiManager
 
     public function __construct()
     {
-        Adapter::init(CommandsCollection::getIntance());
+        Adapter::init(CommandsCollection::getInstance());
 
         $this->router = new Router;
 
