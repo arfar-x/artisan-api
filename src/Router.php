@@ -2,6 +2,7 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Contracts\RouterInterface;
 use Artisan\Api\Controllers\GeneratorCommandController;
 use Artisan\Api\Controllers\SingleCommandController;
 
@@ -9,7 +10,7 @@ use Artisan\Api\Controllers\SingleCommandController;
  * This class is responsible to add routes dynamiccaly and perform related
  * actions on routes.
  */
-class Router
+class Router implements RouterInterface
 {
 
     /**

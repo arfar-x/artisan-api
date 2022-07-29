@@ -5,12 +5,13 @@ namespace Artisan\Api;
 use Artisan\Api\Traits\Singleton;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan as LaravelArtisan;
+use IteratorAggregate;
 
 /**
  * This class is responsible to contain all commands in a collection.
  * Implements Singleton design pattern.
  */
-class CommandsCollection extends Collection
+class CommandsCollection extends Collection implements IteratorAggregate
 {
 
     use Singleton;

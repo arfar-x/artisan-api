@@ -13,6 +13,8 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Contracts\RouterInterface;
+use IteratorAggregate;
 
 class ArtisanApiManager
 {
@@ -21,11 +23,11 @@ class ArtisanApiManager
 
     protected Router $router;
 
-    public function __construct()
+    public function __construct(IteratorAggregate $commands, RouterInterface $router)
     {
-        Adapter::init(CommandsCollection::getInstance());
+        Adapter::init($commands);
 
-        $this->router = new Router;
+        $this->router = $router;
 
         return $this;
     }

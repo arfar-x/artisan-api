@@ -26,10 +26,6 @@ class ArtisanApiServiceProvider extends ServiceProvider
         'env'       => CheckEnvMode::class,
     ];
 
-    private array $commands = [
-        // Artisan\Api\Console\Command::class
-    ];
-
     /**
      * @inheritDoc
      */
@@ -49,18 +45,16 @@ class ArtisanApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->shouldBeLoaded()) {
+            
+            $this->app->make('artisan.api')
+                ->router()->generate();
 
-        $this->app->make('artisan.api')
-            ->router()->generate();
+            $this->setMiddlewares();
 
-        $this->setMiddlewares();
-
-        /**
-         * Register the commands if the application is running via CLI
-         */
-        if ($this->app->runningInConsole()) {
-            $this->commands($this->commands);
         }
+
+        return;
     }
 
     /**
@@ -71,7 +65,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
     private function bind()
     {
         $this->app->bind('artisan.api', function () {
-            return new ArtisanApiManager;
+            return new ArtisanApiManager(CommandsCollection::getInstance(), new Router);
         });
 
         // Registers Facade

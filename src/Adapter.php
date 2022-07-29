@@ -2,6 +2,8 @@
 
 namespace Artisan\Api;
 
+use IteratorAggregate;
+
 /**
  * This class is responsible to extract necessary parameters for dynamic routing.
  * Implements Adapter design pattern. Actually, this class is a joint between commands
@@ -11,22 +13,22 @@ class Adapter
 {
 
     /**
-     * @var CommandsCollection $commands
+     * @var IteratorAggregate $commands
      */
-    protected static CommandsCollection $commands;
+    protected static IteratorAggregate $commands;
 
     /**
      * Gather all commands to work on them
      *
-     * @param CommandsCollection $commands
+     * @param IteratorAggregate $commands
      */
-    public static function init(CommandsCollection $collectionCommands)
+    public static function init(IteratorAggregate $collectionCommands)
     {
         self::$commands = $collectionCommands;
     }
 
     /**
-     * @return CommandsCollection
+     * @return IteratorAggregate
      */
     public static function getCommands()
     {
