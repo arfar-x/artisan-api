@@ -13,6 +13,8 @@
 
 namespace Artisan\Api;
 
+define('ARTISAN_API_DIR', __DIR__);
+
 use Artisan\Api\Console\GenerateKeyCommand;
 use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\AbortForbiddenRoute;

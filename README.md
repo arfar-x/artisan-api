@@ -138,7 +138,7 @@ When inputed command is not found by application: `status : 404 Not Found`
 {
   "ok": false,
   "status": 404,
-  "output": "Command "command:subcommand" is not defined."
+  "output": "Command 'command:subcommand' is not defined."
 }
 ```
 

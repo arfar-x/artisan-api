@@ -4,7 +4,6 @@ namespace Artisan\Api\Console;
 
 use Artisan\Api\Util\GenerateKey;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 
 class GenerateKeyCommand extends Command
 {
@@ -14,8 +13,8 @@ class GenerateKeyCommand extends Command
      * @var string
      */
     protected $signature = 'artisan:key
-                            {algo? : Preferred encryption algorithm}
-                            {--c|count=32 : Key character size}';
+                            {algo? : Preferred encryption algorithm. Supported: MD5, SHA1, base64 }
+                            {--s|show}';
 
     /**
      * The console command description.
@@ -31,6 +30,23 @@ class GenerateKeyCommand extends Command
      */
     public function handle(GenerateKey $generator)
     {
-        // TODO Implement it
+        $algo = $this->argument('algo') ?? 'default';
+
+        $generatedKey = $generator->key($algo);
+
+        if (!$generatedKey) {
+            $this->error("Could not generate a key for Artisan-Api.");
+            return 1;
+        }
+
+        $this->info("Artisan-Api key generated.");
+
+
+        if ($this->option('show')) {
+            $this->newLine();
+            $this->info($generatedKey);
+        }
+
+        return 0;
     }
 }

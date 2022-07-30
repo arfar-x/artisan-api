@@ -2,7 +2,9 @@
 
 return [
 
-    'key' => '2H1QY7FFRoR36iK3b8TpbD1cpos1EhGncZBHil550HA=',
+    // 'kkeys' => config('artisan.key', 'your_key'),
+
+    'key' => 'your_key',
 
     'api' => [
         'prefix'    => "/artisan/api",
