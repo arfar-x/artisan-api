@@ -28,14 +28,15 @@ Here we brought REST API solution for you.**
 - **[Configurations](#configurations)**
   - **[API Prefix and HTTP Method](#api-prefix-and-http-method)**
   - **[Auto Run](#auto-run)**
-- **[Middlewares](#middlewares)**
+- **[Security](#security)**
+  - **[Middlewares](#middlewares)**
 - **[Useful tips](#useful-tips)**
 - **[Todo](#todo)**
 
 
 ### Get Started
 
-To use this package, you should install it alongside [Laravel v9.5](https://laravel.com/) and [PHP v8.0](https://php.net) or higher.
+To use this package, you should install it alongside [Laravel v9.21](https://laravel.com/) and [PHP v8.0](https://php.net) or higher.
 
 you can install it via [Composer package manager](https://getcomposer.org/):
 ```shell
@@ -119,15 +120,15 @@ https://domain.com/artisan/api/make/model/MyModel?options=controller,f
 
 #### Responses
 
-After calling an endpoint, you will receive a `Json` response.
+After calling an endpoint, you will receive a `` response.
 
 ##### Successful
 When everything works perfectly: `status : 200 OK`
 ```json
 {
-  ok: true,
-  status: 200,
-  output: "Output of the command, given by Artisan"
+  "ok": true,
+  "status": 200,
+  "output": "Output of the command, given by Artisan"
 }
 ```
 
@@ -135,9 +136,9 @@ When everything works perfectly: `status : 200 OK`
 When inputed command is not found by application: `status : 404 Not Found`
 ```json
 {
-  ok: false,
-  status: 404,
-  output: "Command "command:subcommand" is not defined."
+  "ok": false,
+  "status": 404,
+  "output": "Command "command:subcommand" is not defined."
 }
 ```
 
@@ -145,9 +146,9 @@ When inputed command is not found by application: `status : 404 Not Found`
 When arguments are given by an invalid format: `status : 500 Server Error`
 ```json
 {
-  ok: false,
-  status: 500,
-  output: "Argument(s) 'key:value' given by an invalid format."
+  "ok": false,
+  "status": 500,
+  "output": "Argument(s) 'key:value' given by an invalid format."
 }
 ```
 
@@ -155,9 +156,9 @@ When arguments are given by an invalid format: `status : 500 Server Error`
 When options are given by an invalid format: `status : 500 Server Error`
 ```json
 {
-  ok: false,
-  status: 500,
-  output: "Options(s) 'key:value' given by an invalid format."
+  "ok": false,
+  "status": 500,
+  "output": "Options(s) 'key:value' given by an invalid format."
 }
 ```
 
@@ -220,7 +221,13 @@ return [
 
 **This prevents not to load package's service-provider (`ArtisanApiServiceProvider`) by default.**
 
-### Middlewares
+### Security
+Artisan-Api has done its best to protect RCE vulnerability and other possible logical bugs.
+> Artisan-Api uses `Symfony/console` under the hood and all commands execution are filtered and recognized by it. There is no direct call to `shell_exec()` or `exec()` functions.
+
+#### IP and Port restriction
+
+#### Middlewares
 There are two middlewares in **Artisan-Api**.
 
 `CheckEnvMode` middleware exists to abort requests while in production environment.

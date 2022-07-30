@@ -13,17 +13,25 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Console\GenerateKeyCommand;
 use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\AbortForbiddenRoute;
+use Artisan\Api\Middleware\AclValidation;
 use Artisan\Api\Middleware\CheckEnvMode;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
 {
     private array $middlewares = [
+        'acl'       => AclValidation::class,
         'forbidden' => AbortForbiddenRoute::class,
         'env'       => CheckEnvMode::class,
+    ];
+
+    private array $commands = [
+        GenerateKeyCommand::class
     ];
 
     /**
@@ -46,6 +54,8 @@ class ArtisanApiServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->shouldBeLoaded()) {
+
+            $this->commands($this->commands);
             
             $this->app->make('artisan.api')
                 ->router()->generate();
