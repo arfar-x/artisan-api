@@ -2,12 +2,13 @@
 
 namespace Artisan\Api\Middleware;
 
+use Artisan\Api\Contracts\MiddlewareInterface;
 use Closure;
 
 /**
  * Access-control List Validation
  */
-class AclValidation
+class AclValidation implements MiddlewareInterface
 {
     public function handle($request, Closure $next)
     {

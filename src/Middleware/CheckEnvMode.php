@@ -2,10 +2,11 @@
 
 namespace Artisan\Api\Middleware;
 
+use Artisan\Api\Contracts\MiddlewareInterface;
 use Closure;
 use Illuminate\Support\Facades\App;
 
-class CheckEnvMode
+class CheckEnvMode implements MiddlewareInterface
 {
     /**
      * Abort with 404 when application is in production mode and run.only-dev is true config.

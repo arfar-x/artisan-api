@@ -20,6 +20,7 @@ use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\AbortForbiddenRoute;
 use Artisan\Api\Middleware\AclValidation;
 use Artisan\Api\Middleware\CheckEnvMode;
+use Artisan\Api\Middleware\TrustIp;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
@@ -31,6 +32,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
      * @var array
      */
     private array $middlewares = [
+        'ip'        => TrustIp::class,
         'acl'       => AclValidation::class,
         'forbidden' => AbortForbiddenRoute::class,
         'env'       => CheckEnvMode::class,

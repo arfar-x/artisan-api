@@ -3,10 +3,11 @@
 namespace Artisan\Api\Middleware;
 
 use Artisan\Api\Adapter;
+use Artisan\Api\Contracts\MiddlewareInterface;
 use Closure;
 use Illuminate\Support\Str;
 
-class AbortForbiddenRoute
+class AbortForbiddenRoute implements MiddlewareInterface
 {
 
     /**
