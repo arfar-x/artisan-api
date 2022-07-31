@@ -225,7 +225,8 @@ return [
 Artisan-Api has done its best to protect RCE vulnerability and other possible logical bugs.
 > Artisan-Api uses `Symfony/console` under the hood and all commands execution are filtered and recognized by it. There is no direct call to `shell_exec()` or `exec()` functions.
 
-#### IP and Port restriction
+#### IP restriction
+You can simply allow as many IP as you want to access to your commands. `'*'` means no all IPs are trusted.
 
 #### Middlewares
 There are two middlewares in **Artisan-Api**.

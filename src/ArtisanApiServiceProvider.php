@@ -69,12 +69,11 @@ class ArtisanApiServiceProvider extends ServiceProvider
         if ($this->shouldBeLoaded()) {
 
             $this->commands($this->commands);
-            
+
             $this->app->make('artisan.api')
                 ->router()->generate();
 
             $this->setMiddlewares();
-
         }
 
         return;
@@ -94,7 +93,6 @@ class ArtisanApiServiceProvider extends ServiceProvider
                 new CommandsIterator,
                 new Router
             );
-
         });
 
         // Registers Facade
