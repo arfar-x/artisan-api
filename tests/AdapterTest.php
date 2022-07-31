@@ -3,21 +3,26 @@
 namespace Artisan\Api\Tests;
 
 use Artisan\Api\Adapter;
-use Artisan\Api\CommandsCollection;
+use Artisan\Api\CommandsIterator;
+use Artisan\Api\Contracts\AdapterInterface;
 use Artisan\Api\Tests\TestCase;
 
 class AdapterTest extends TestCase
 {
 
-    protected CommandsCollection $collection;
+    protected CommandsIterator $commandsIterator;
+
+    protected AdapterInterface $adapter;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->collection = CommandsCollection::getInstance();
+        $this->commandsIterator = CommandsIterator::getInstance();
 
-        Adapter::init($this->collection);
+        $this->adapter = Adapter::getInstance();
+
+        $this->adapter->init($this->commandsIterator);
     }
 
     public function testGetCommandsUri()
@@ -25,7 +30,7 @@ class AdapterTest extends TestCase
         $command = $this->command("cache:clear");
         $routeSignature = "{command}/{subcommand}/";
 
-        $uri = Adapter::toUri($command, true);
+        $uri = $this->adapter->toUri($command, true);
 
         $this->assertIsString($uri);
         $this->assertEquals($routeSignature, $uri);
@@ -33,7 +38,7 @@ class AdapterTest extends TestCase
 
     public function testGetCommandAsCommandName()
     {
-        $name = Adapter::toCommand("make", "model");
+        $name = $this->adapter->toCommand("make", "model");
 
         $this->assertMatchesRegularExpression("/(.*):(.*)/", $name);
     }
@@ -42,7 +47,7 @@ class AdapterTest extends TestCase
     {
         $stringArgs = "arg1:something,key:value,key2:value2,nullValue,assoc:something";
 
-        $arrayArgs = Adapter::toArguments($stringArgs);
+        $arrayArgs = $this->adapter->toArguments($stringArgs);
 
         $this->assertIsArray($arrayArgs);
 
@@ -64,7 +69,7 @@ class AdapterTest extends TestCase
     {
         $stringArgs = "opt1:something,key:value,key2:value2,nullValue,assoc:something,v,c";
 
-        $arrayArgs = Adapter::toOptions($stringArgs);
+        $arrayArgs = $this->adapter->toOptions($stringArgs);
 
         $this->assertIsArray($arrayArgs);
 
@@ -90,7 +95,7 @@ class AdapterTest extends TestCase
     {
         $command = $this->command("make:model");
 
-        $isGenerator = Adapter::isGenerator($command);
+        $isGenerator = $this->adapter->isGenerator($command);
 
         $this->assertTrue($isGenerator);
     }
@@ -99,19 +104,19 @@ class AdapterTest extends TestCase
     {
         $command = $this->command("make:migration");
 
-        $isGenerator = Adapter::isGenerator($command);
+        $isGenerator = $this->adapter->isGenerator($command);
 
         $this->assertTrue($isGenerator);
     }
 
     /**
-     * Get inputed command object from CommandsCollection
+     * Get inputed command object from CommandsIterator
      *
      * @param string $name
      * @return object
      */
     protected function command($name)
     {
-        return $this->collection->get($name);
+        return $this->commandsIterator->get($name);
     }
 }

@@ -2,20 +2,23 @@
 
 return [
 
-    'key' => '2H1QY7FFRoR36iK3b8TpbD1cpos1EhGncZBHil550HA=',
+    'key' => 'ATTQU4mcMuBKlx9nL8Y/ST3F4kXR7rXZu1eqkQUgp2E=',
 
     'api' => [
         'prefix'    => "/artisan/api",
         'method'    => ['POST', 'GET', 'HEAD'],
-        'signature' => '{command}/{subcommand}/{?name}'
+        'signature' => '{command}/{subcommand}/{?name}?args={args}'
     ],
 
-    'auto-run' => true,
+    'run' => [
+        'only-dev' => false,
+        'auto' => true
+    ],
 
 
     /*
      |--------------------------------------------------------------------------
-     | Trust who or what
+     | Trust who and what
      |--------------------------------------------------------------------------
      |
      | Here you can allow users with specific roles and IPs to go through your commands.
@@ -26,24 +29,20 @@ return [
      |
      */
     'trust' => [
-
         'roles or users' => [
             'admin', 'manager'
         ],
-
         'ip' => [
             '127.0.0.1',
             'localhost',
             '0.0.0.0',
         ],
-
         'port' => [
             80,
             443,
             8000,
             8080
         ]
-
     ],
 
 

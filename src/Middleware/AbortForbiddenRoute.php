@@ -18,7 +18,7 @@ class AbortForbiddenRoute
      */
     public function handle($request, Closure $next)
     {
-        $command = Adapter::toCommand($request->command, $request->subcommand);
+        $command = Adapter::getInstance()->toCommand($request->command, $request->subcommand);
         
         foreach (config('artisan.forbidden-routes') as $route) {
             if (Str::is($route, $command)) {

@@ -30,12 +30,12 @@ class Caller
         try {
 
             if (is_array($command))
-                $command = Adapter::toCommand($command["command"], $command["subcommand"]);
+                $command = Adapter::getInstance()->toCommand($command["command"], $command["subcommand"]);
             else
                 $command = $command["command"];
             
-            $arguments = $arguments ? Adapter::toArguments($arguments) : [];
-            $options = $options ? Adapter::toOptions($options) : [];
+            $arguments = $arguments ? Adapter::getInstance()->toArguments($arguments) : [];
+            $options = $options ? Adapter::getInstance()->toOptions($options) : [];
 
             $parameters = array_merge_recursive($arguments, $options);
 

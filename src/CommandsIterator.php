@@ -11,7 +11,7 @@ use IteratorAggregate;
  * This class is responsible to contain all commands in a collection.
  * Implements Singleton design pattern.
  */
-class CommandsCollection extends Collection implements IteratorAggregate
+class CommandsIterator extends Collection implements IteratorAggregate
 {
 
     use Singleton;

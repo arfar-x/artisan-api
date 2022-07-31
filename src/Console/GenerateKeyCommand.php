@@ -30,7 +30,7 @@ class GenerateKeyCommand extends Command
      */
     public function handle(GenerateKey $generator)
     {
-        $algo = $this->argument('algo') ?? 'default';
+        $algo = $this->argument('algo') ?? 'base64';
 
         $generatedKey = $generator->key($algo);
 

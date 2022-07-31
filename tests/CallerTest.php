@@ -50,8 +50,6 @@ class CallerTest extends TestCase
     {
         $output = $this->callCommand();
 
-        // dd($output);
-
         $this->assertIsString($output);
         $this->assertNotNull($output);
         $this->assertStringContainsString("Model created successfully.", $output);

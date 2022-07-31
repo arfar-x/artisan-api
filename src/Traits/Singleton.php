@@ -15,7 +15,7 @@ trait Singleton
      */
     protected static $_instance = null;
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (is_null(self::$_instance)) {
             return self::$_instance = new self;

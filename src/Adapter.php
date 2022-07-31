@@ -2,6 +2,8 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Contracts\AdapterInterface;
+use Artisan\Api\Traits\Singleton;
 use IteratorAggregate;
 
 /**
@@ -9,106 +11,115 @@ use IteratorAggregate;
  * Implements Adapter design pattern. Actually, this class is a joint between commands
  * and their routes.
  */
-class Adapter
+class Adapter implements AdapterInterface
 {
+
+    use Singleton;
 
     /**
      * @var IteratorAggregate $commands
      */
-    protected static IteratorAggregate $commands;
+    protected IteratorAggregate $commands;
 
     /**
      * Gather all commands to work on them
      *
      * @param IteratorAggregate $commands
      */
-    public static function init(IteratorAggregate $collectionCommands)
+    public function init(IteratorAggregate $collectionCommands)
     {
-        self::$commands = $collectionCommands;
+        $this->commands = $collectionCommands;
     }
 
     /**
-     * @return IteratorAggregate
+     * @inheritDoc
      */
-    public static function getCommands()
+    public function getIterator(): IteratorAggregate
     {
-        return self::$commands;
+        return $this->commands;
     }
 
     /**
-     * Get command name and return parsed translated URI for API routes
-     *
-     * @param Command $command
-     * @param bool $withHiddens
-     * @return void|string
+     * @inheritDoc
      */
-    public static function toUri(Command $command, bool $withHiddens)
+    public function toUri(Command $command, bool $withHiddens): string|false
     {
         $commandName = $command->getName();
 
-        $command = self::$commands->get($commandName);
+        $command = $this->commands->get($commandName);
 
-        if ($withHiddens === false && $command->isHidden() === true) return;
+        if ($withHiddens === false && $command->isHidden() === true) return false;
 
 
         // Replaces `:` with `/` for those commands' name with 'make:model' format
-        $route = function () use ($commandName) {
-            /**
-             * If command's name follows 'make:model', then return '{command}/{subcommand}
-             * If it follows 'help' or 'list', then return '{command}
-             */
-            if (preg_match("/(.*):(.*)/", $commandName)) {
-                return "{command}/{subcommand}";
-            }
-
-            return "{command}";
-        };
+        $route = $this->getRoute($commandName);
 
 
         // Get command's arguments to route string
-        $arguments = function () use ($command) {
-            /**
-             * If command is Generator, then an argument called 'name' is mandatory.
-             * All Generator commands need 'name' argument.
-             * Remained arguments would be gather from URI query. (?args=key:myId)
-             * 
-             * Some commands like 'make:migration' has an argument called 'name',
-             * these kind of commands actually create files, but not classes. So
-             * they will NOT be considered as Generator commands. Although, they
-             * need arguments to perform on. Consequently we search for 'name' key
-             * in command's arguments.
-             */
-            if (self::isGenerator($command)) {
-                return "{name}";
-            }
+        $arguments = $this->getArguments($command);
 
-            return "";
-        };
-
-        $uri = $route() . "/" . $arguments();
+        $uri = $route . "/" . $arguments;
 
         return $uri;
     }
 
     /**
-     * Check if command is generator
+     * Get route of the commands
+     *
+     * @param string $command
+     * @return string
+     */
+    protected function getRoute(string $command)
+    {
+        /**
+         * If command's name follows 'make:model', then return '{command}/{subcommand}
+         * If it follows 'help' or 'list', then return '{command}
+         */
+        if (preg_match("/(.*):(.*)/", $command)) {
+            return "{command}/{subcommand}";
+        }
+
+        return "{command}";
+    }
+
+    /**
+     * Get arguments of the commands
      *
      * @param object $command
-     * @return boolean
+     * @return string
      */
-    public static function isGenerator($command)
+    protected function getArguments($command)
+    {
+        /**
+         * If command is Generator, then an argument called 'name' is mandatory.
+         * All Generator commands need 'name' argument.
+         * Remained arguments would be gather from URI query. (?args=key:myId)
+         * 
+         * Some commands like 'make:migration' has an argument called 'name',
+         * these kind of commands actually create files, but not classes. So
+         * they will NOT be considered as Generator commands. Although, they
+         * need arguments to perform on. Consequently we search for 'name' key
+         * in command's arguments.
+         */
+        if ($this->isGenerator($command)) {
+            return "{name}";
+        }
+
+        return "";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isGenerator($command): bool
     {
         return $command->isGenerator() || in_array("name", $command->getArguments());
     }
 
     /**
-     * Convert command into Artisan-like command's name
-     *
-     * @param string $command
-     * @param string $subcommand
-     * @return string
+     * @inheritDoc
      */
-    public static function toCommand($command, $subcommand = null)
+    public function toCommand($command, $subcommand = null): string
     {
         if ($subcommand) {
             return "$command:$subcommand";
@@ -118,31 +129,21 @@ class Adapter
     }
 
     /**
-     * Turn argument's string into the following format
-     * 
-     * ["name" => ArgumentValue]
-     * 
-     * @param string $arguments
-     * @return array
+     * @inheritDoc
      */
-    public static function toArguments($arguments)
+    public function toArguments($arguments): array
     {
-        $array = self::separator($arguments);
+        $array = $this->separator($arguments);
 
         return $array;
     }
 
     /**
-     * Turn option's string into the following format
-     * 
-     * ["--model" => OptionValue]
-     * 
-     * @param string $options
-     * @return array
+     * @inheritDoc
      */
-    public static function toOptions($options)
+    public function toOptions($options): array
     {
-        $array = self::separator($options);
+        $array = $this->separator($options);
 
         $keys = array_keys($array);
         $values = array_values($array);
@@ -164,7 +165,7 @@ class Adapter
      * @param string $string
      * @return array
      */
-    protected static function separator(string $string): array
+    protected function separator(string $string): array
     {
         $array = [];
 

@@ -2,6 +2,7 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Contracts\AdapterInterface;
 use Artisan\Api\Contracts\RouterInterface;
 use Artisan\Api\Controllers\GeneratorCommandController;
 use Artisan\Api\Controllers\SingleCommandController;
@@ -37,14 +38,21 @@ class Router implements RouterInterface
         '/command', // Provide route to client to add binded command within HTTP request
         '/docs',    // Show documents of available command through APIs
     ];
+    
+    /**
+     * Instance of adapter to deal with commands
+     *
+     * @var AdapterInterface
+     */
+    protected AdapterInterface $adapter;
 
     /**
-     * Initialize necessary parameters
-     *
-     * @return self
+     * @inheritDoc
      */
-    public function __construct()
+    public function init(AdapterInterface $adapter)
     {
+        $this->adapter = $adapter;
+
         $this->method = config('artisan.api.method', ['POST']);
         $this->prefix = config('artisan.api.prefix', '/artisan/api');
 
@@ -60,7 +68,7 @@ class Router implements RouterInterface
      * @param boolean $withHiddens
      * @return void
      */
-    public function generate(bool $withHiddens = false)
+    public function generate(bool $withHiddens = false): void
     {
         $routeConfig = [
             'prefix' => $this->prefix,
@@ -76,10 +84,10 @@ class Router implements RouterInterface
             }
 
             // Add dynamic routes for each command
-            foreach (Adapter::getCommands()->all() as $command) {
+            foreach ($this->adapter->getIterator()->all() as $command) {
 
                 // Prevents empty routes to be added from hidden commands
-                if (!$uri = Adapter::toUri($command, $withHiddens))
+                if (!$uri = $this->adapter->toUri($command, $withHiddens))
                     continue;
 
                 $route = $router->addRoute($this->method, $uri, $this->getAction($command));
@@ -101,7 +109,7 @@ class Router implements RouterInterface
      */
     protected function getAction($command = null)
     {
-        if ($command && Adapter::isGenerator($command))
+        if ($command && $this->adapter->isGenerator($command))
             return [GeneratorCommandController::class, 'run'];
 
         return [SingleCommandController::class, 'run'];
@@ -118,7 +126,7 @@ class Router implements RouterInterface
     /**
      * @return array
      */
-    public function getStaticRoutes(): array
+    protected function getStaticRoutes(): array
     {
         return $this->staticRoutes;
     }

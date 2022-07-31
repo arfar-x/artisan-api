@@ -20,18 +20,27 @@ use Artisan\Api\Facades\ArtisanApi;
 use Artisan\Api\Middleware\AbortForbiddenRoute;
 use Artisan\Api\Middleware\AclValidation;
 use Artisan\Api\Middleware\CheckEnvMode;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
 {
+
+    /**
+     * Package middlewares to be pushed
+     *
+     * @var array
+     */
     private array $middlewares = [
         'acl'       => AclValidation::class,
         'forbidden' => AbortForbiddenRoute::class,
         'env'       => CheckEnvMode::class,
     ];
 
+    /**
+     * Package commands
+     *
+     * @var array
+     */
     private array $commands = [
         GenerateKeyCommand::class
     ];
@@ -77,7 +86,13 @@ class ArtisanApiServiceProvider extends ServiceProvider
     private function bind()
     {
         $this->app->bind('artisan.api', function () {
-            return new ArtisanApiManager(CommandsCollection::getInstance(), new Router);
+
+            return new ArtisanApiManager(
+                Adapter::getInstance(),
+                new CommandsIterator,
+                new Router
+            );
+
         });
 
         // Registers Facade
@@ -106,13 +121,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
      */
     private function shouldBeLoaded()
     {
-        /**
-         * Prevents application to apply package to container while auto-run is disabled.
-         * This can be modified in config/artisan.php
-         */
-        if (!config('artisan.auto-run')) return false;
-
-        if (App::isProduction()) return false;
+        if (!config('artisan.run.auto')) return false;
 
         return true;
     }

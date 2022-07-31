@@ -11,11 +11,13 @@ class CheckEnvModeTest extends TestCase
         // Switch APP_ENV to 'production' temporarily, default is 'testing'
         app()['env'] = "production";
 
+        config(['artisan.run.only-dev' => false]);
+
         $uri = $this->apiPrefix . "/help";
 
         $response = $this->post($uri);
 
-        $response->assertNotFound();
+        $response->assertOk();
     }
 
     public function testMiddlewareAllowsInDevelopmentMode()
@@ -25,5 +27,18 @@ class CheckEnvModeTest extends TestCase
         $response = $this->post($uri);
 
         $response->assertOk();
+    }
+
+    public function testIfOnlyDevIsTrueAndEnvIsProduction()
+    {
+        app()['env'] = "production";
+
+        config(['artisan.run.only-dev' => true]);
+
+        $uri = $this->apiPrefix . "/help";
+
+        $response = $this->post($uri);
+
+        $response->assertNotFound();
     }
 }

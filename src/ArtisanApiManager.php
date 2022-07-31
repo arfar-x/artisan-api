@@ -13,20 +13,21 @@
 
 namespace Artisan\Api;
 
+use Artisan\Api\Contracts\AdapterInterface;
 use Artisan\Api\Contracts\RouterInterface;
 use IteratorAggregate;
 
 class ArtisanApiManager
 {
 
-    const VERSION = "1.0.0";
-
     protected Router $router;
 
-    public function __construct(IteratorAggregate $commands, RouterInterface $router)
+    public function __construct(AdapterInterface $adapter, IteratorAggregate $commands, RouterInterface $router)
     {
-        Adapter::init($commands);
+        $adapter->init($commands);
+        $router->init($adapter);
 
+        $this->adapter = $adapter;
         $this->router = $router;
 
         return $this;
@@ -37,8 +38,18 @@ class ArtisanApiManager
      *
      * @return Router
      */
-    public function router(): Router
+    public function router(): RouterInterface
     {
         return $this->router;
+    }
+
+    /**
+     * Get adapter instance
+     *
+     * @return AdapterInterface
+     */
+    public function adapter(): AdapterInterface
+    {
+        return $this->adapter;
     }
 }
