@@ -84,7 +84,7 @@ class Router implements RouterInterface
             }
 
             // Add dynamic routes for each command
-            foreach ($this->adapter->getIterator()->all() as $command) {
+            foreach ($this->adapter->getAll() as $command) {
 
                 // Prevents empty routes to be added from hidden commands
                 if (!$uri = $this->adapter->toUri($command, $withHiddens))

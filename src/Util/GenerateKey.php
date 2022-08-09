@@ -63,8 +63,6 @@ final class GenerateKey
      */
     protected function writeKeyInConfigFile($key)
     {
-        app('config')['artisan.key'] = $key;
-
         return file_put_contents($this->getPackageConfigDir(), 
             preg_replace(
                 "/'key'\s=>\s(.*)/",

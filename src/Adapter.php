@@ -42,6 +42,14 @@ class Adapter implements AdapterInterface
     /**
      * @inheritDoc
      */
+    public function getAll(): array
+    {
+        return $this->commands->all();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function toUri(Command $command, bool $withHiddens): string|false
     {
         $commandName = $command->getName();

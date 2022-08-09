@@ -14,6 +14,8 @@ Here we brought REST API solution for you.**
 
 **You are able to run Artisan commands by REST APIs easily.**
 
+*'README.md need to be updated'*
+
 ### Table of contents
 - **[Get Started](#get-started)**
 - **[Endpoints](#endpoints)**
@@ -226,7 +228,7 @@ Artisan-Api has done its best to protect RCE vulnerability and other possible lo
 > Artisan-Api uses `Symfony/console` under the hood and all commands execution are filtered and recognized by it. There is no direct call to `shell_exec()` or `exec()` functions.
 
 #### IP restriction
-You can simply allow as many IP as you want to access to your commands. `'*'` means no all IPs are trusted.
+You can simply allow as many IP as you want to access to your commands. `'*'` means all IPs are trusted.
 
 #### Middlewares
 There are two middlewares in **Artisan-Api**.

@@ -69,4 +69,11 @@ interface AdapterInterface
      */
     public function getIterator(): IteratorAggregate;
 
+    /**
+     * Get all commands as an iterator array
+     * 
+     * @return array
+     */
+    public function getAll(): array;
+
 }

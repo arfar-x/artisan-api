@@ -17,10 +17,6 @@ define('ARTISAN_API_DIR', __DIR__);
 
 use Artisan\Api\Console\GenerateKeyCommand;
 use Artisan\Api\Facades\ArtisanApi;
-use Artisan\Api\Middleware\AbortForbiddenRoute;
-use Artisan\Api\Middleware\AclValidation;
-use Artisan\Api\Middleware\CheckEnvMode;
-use Artisan\Api\Middleware\TrustIp;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
@@ -31,12 +27,7 @@ class ArtisanApiServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    private array $middlewares = [
-        'ip'        => TrustIp::class,
-        'acl'       => AclValidation::class,
-        'forbidden' => AbortForbiddenRoute::class,
-        'env'       => CheckEnvMode::class,
-    ];
+    private array $middlewares = [];
 
     /**
      * Package commands
@@ -112,6 +103,8 @@ class ArtisanApiServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . "/../config/artisan.php" => config_path('artisan.php')
         ]);
+
+        $this->middlewares = config('artisan.middlewares');
     }
 
     /**
