@@ -189,7 +189,7 @@ return [
 Whenever client wants to access these commands by endpoints, it will be given a `404 NOT_FOUND` HTTP response.
 
 #### Authentication
-All enpoints will be generated under the `api` middleware of Laravel and prevented by built-in authnetication system, mostly with `Sanctum` and API tokens.
+All enpoints will be generated under the `api` middleware of Laravel and prevented by built-in authentication system, mostly with `Sanctum` and API tokens.
 
 ### Configurations
 

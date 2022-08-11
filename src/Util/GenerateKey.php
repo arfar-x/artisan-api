@@ -79,6 +79,6 @@ final class GenerateKey
      */
     protected function getPackageConfigDir()
     {
-        return ARTISAN_API_DIR . "/../config/artisan.php";
+        return app()["path.artisan-api"] . "/../config/artisan.php";
     }
 }

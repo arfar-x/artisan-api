@@ -13,8 +13,6 @@
 
 namespace Artisan\Api;
 
-define('ARTISAN_API_DIR', __DIR__);
-
 use Artisan\Api\Console\GenerateKeyCommand;
 use Artisan\Api\Facades\ArtisanApi;
 use Illuminate\Support\ServiceProvider;
@@ -85,6 +83,8 @@ class ArtisanApiServiceProvider extends ServiceProvider
                 new Router
             );
         });
+
+        $this->app->instance('path.artisan-api', __DIR__);
 
         // Registers Facade
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
