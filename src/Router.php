@@ -27,17 +27,6 @@ class Router implements RouterInterface
      * @var array
      */
     protected array $routes = [];
-
-    /**
-     * Routes that are not commands but should do specific actions
-     *
-     * @var array
-     */
-    protected array $staticRoutes = [
-        '/all',     // Get all available commands via REST APIs by this package
-        '/command', // Provide route to client to add binded command within HTTP request
-        '/docs',    // Show documents of available command through APIs
-    ];
     
     /**
      * Instance of adapter to deal with commands
@@ -78,11 +67,6 @@ class Router implements RouterInterface
         app('router')
             ->group($routeConfig, function ($router) use ($withHiddens) {
 
-            // Add static routes
-            foreach ($this->getStaticRoutes() as $route) {
-                $router->addRoute($this->method, $route, $this->getAction());
-            }
-
             // Add dynamic routes for each command
             foreach ($this->adapter->getAll() as $command) {
 
@@ -121,13 +105,5 @@ class Router implements RouterInterface
     public function getRoutes(): array
     {
         return $this->routes;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getStaticRoutes(): array
-    {
-        return $this->staticRoutes;
     }
 }

@@ -4,7 +4,7 @@
     "keywords": ["laravel", "artisan", "api", "rest", "http", "php", "command", "console"],
     "type": "project",
     "license": "MIT",
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Alireza Farhanian",

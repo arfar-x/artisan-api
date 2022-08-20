@@ -5,21 +5,6 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Access key
-     |--------------------------------------------------------------------------
-     |
-     | Just like any other REST APIs you must have a unique key to access it.
-     | But there is a difference. In addtion to have the Authentication API keys
-     | like 'Bearer', you have to hold a unique key to access Artisan APIs in
-     | your HTTP header. It is an actual key to open the door!
-     | You can generate a new one by `artisan:key` command.
-     |
-     */
-    'key' => 'your generated key', // not implemented key
-
-
-    /*
-     |--------------------------------------------------------------------------
      | API and endpoints
      |--------------------------------------------------------------------------
      |
@@ -29,7 +14,6 @@ return [
     'api' => [
         'prefix'    => "/artisan/api",
         'method'    => 'POST', // or ['POST', 'PUT', ...]
-        'signature' => '{command}/{subcommand}/{?name}?args={args}' // not implemented yet
     ],
 
 

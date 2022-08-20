@@ -20,15 +20,28 @@ use IteratorAggregate;
 class ArtisanApiManager
 {
 
-    protected Router $router;
+    protected AdapterInterface $adapter;
 
-    public function __construct(AdapterInterface $adapter, IteratorAggregate $commands, RouterInterface $router)
+    protected RouterInterface $router;
+
+    public function __construct(AdapterInterface $adapter, RouterInterface $router)
     {
-        $adapter->init($commands);
-        $router->init($adapter);
-
         $this->adapter = $adapter;
         $this->router = $router;
+
+        return $this;
+    }
+
+    /**
+     * Initializing stage
+     *
+     * @param IteratorAggregate $commands
+     * @return self
+     */
+    public function init(IteratorAggregate $commands)
+    {
+        $this->adapter->init($commands);
+        $this->router->init($this->adapter);
 
         return $this;
     }

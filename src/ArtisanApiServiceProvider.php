@@ -13,8 +13,8 @@
 
 namespace Artisan\Api;
 
-use Artisan\Api\Console\GenerateKeyCommand;
 use Artisan\Api\Facades\ArtisanApi;
+use Illuminate\Support\Facades\Artisan as LaravelArtisan;
 use Illuminate\Support\ServiceProvider;
 
 class ArtisanApiServiceProvider extends ServiceProvider
@@ -26,15 +26,6 @@ class ArtisanApiServiceProvider extends ServiceProvider
      * @var array
      */
     private array $middlewares = [];
-
-    /**
-     * Package commands
-     *
-     * @var array
-     */
-    private array $commands = [
-        GenerateKeyCommand::class
-    ];
 
     /**
      * @inheritDoc
@@ -57,15 +48,25 @@ class ArtisanApiServiceProvider extends ServiceProvider
     {
         if ($this->shouldBeLoaded()) {
 
-            $this->commands($this->commands);
-
-            $this->app->make('artisan.api')
-                ->router()->generate();
-
             $this->setMiddlewares();
         }
+    }
 
-        return;
+    /**
+     * @inheritDoc
+     * 
+     * We have to initialize the package a feed the commands after
+     * loading all providers by Laravel
+     */
+    public function callBootedCallbacks()
+    {
+        $this->app->call(
+            function () {
+                $this->app->make('artisan.api')
+                    ->init(new CommandsIterator( LaravelArtisan::all() ))
+                    ->router()->generate();
+            }
+        );
     }
 
     /**
@@ -75,11 +76,10 @@ class ArtisanApiServiceProvider extends ServiceProvider
      */
     private function bind()
     {
-        $this->app->bind('artisan.api', function () {
+        $this->app->singleton('artisan.api', function () {
 
             return new ArtisanApiManager(
                 Adapter::getInstance(),
-                new CommandsIterator,
                 new Router
             );
         });

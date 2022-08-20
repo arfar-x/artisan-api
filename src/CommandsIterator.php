@@ -4,7 +4,6 @@ namespace Artisan\Api;
 
 use Artisan\Api\Traits\Singleton;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Artisan as LaravelArtisan;
 use IteratorAggregate;
 
 /**
@@ -23,8 +22,6 @@ class CommandsIterator extends Collection implements IteratorAggregate
      */
     public function __construct($items = [])
     {
-        $commands = !empty($items) ? $items : LaravelArtisan::all();
-
         parent::__construct($commands);
 
         $this->setCommands($this->items);
