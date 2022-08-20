@@ -4,7 +4,6 @@
     "keywords": ["laravel", "artisan", "api", "rest", "http", "php", "command", "console"],
     "type": "project",
     "license": "MIT",
-    "version": "1.2.1",
     "minimum-stability": "beta",
     "authors": [
         {
